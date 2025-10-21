@@ -4,6 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SPECTЯA®</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png"> <!-- For iOS -->
+  
+  <!-- Open Graph for Social Previews -->
+  <meta property="og:title" content="SPECTЯA® - Coming Soon CDMX Colonia Roma // Buenos Aires Argentina">
+  <meta property="og:description" content="COMING SOON CDMX COLONIA ROMA // BUENOS AIRES ARGENTINA - SPECTЯA® 2025">
+  <meta property="og:image" content="/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://spectrart.xyz">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card (for X/Twitter) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SPECTЯA® - Coming Soon CDMX Colonia Roma // Buenos Aires Argentina">
+  <meta name="twitter:description" content="COMING SOON CDMX COLONIA ROMA // BUENOS AIRES ARGENTINA - SPECTЯA® 2025">
+  <meta name="twitter:image" content="/assets/images/og-image.png">
+  
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -11,22 +31,23 @@
   <div id="app">
     <canvas id="shaderCanvas"></canvas>
     
-<model-viewer class="logo" 
-  src="assets/models/logo.glb"
-  ar 
-  auto-rotate 
-  auto-rotate-delay="0" 
-  auto-rotate-speed="10"
-  camera-controls
-  exposure="1"
-  aria-label="3D SPECTЯA® logo">
-</model-viewer>
+    <model-viewer class="logo" 
+      src="assets/models/logo.glb"
+      ar 
+      auto-rotate 
+      auto-rotate-delay="0" 
+      auto-rotate-speed="10"
+      camera-controls
+      exposure="1"
+      aria-label="3D SPECTЯA® logo">
+    </model-viewer>
 
-<footer class="footer">
-  <div class="copyright">
-    COMING SOON CDMX COLONIA ROMA // BUENOS AIRES ARGENTINA - SPECTЯA <span class="mirrored-a">®</span> <span id="year"></span>
+    <footer class="footer">
+      <div class="copyright">
+        COMING SOON CDMX COLONIA ROMA // BUENOS AIRES ARGENTINA - SPECTЯA <span class="mirrored-a">®</span> <span id="year"></span>
+      </div>
+    </footer>
   </div>
-</footer>  </div>
 
   <script>
     const canvas = document.getElementById('shaderCanvas');
@@ -112,4 +133,3 @@
   </script>
 </body>
 </html>
-
