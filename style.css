@@ -21,9 +21,7 @@ model-viewer.logo{
 
 .copyright {
   display:inline-block;
-  width:160px;
-  height:24px;
-  line-height:24px;
+  padding:2px 8px;
   font-size:8px;
   font-weight:400;
   letter-spacing:0.08em;
@@ -57,9 +55,6 @@ model-viewer.logo{
 
 @media (max-width:520px){
   .copyright{
-    width:130px;
-    height:20px;
-    line-height:20px;
     font-size:7px;
     letter-spacing:0.06em;
   }

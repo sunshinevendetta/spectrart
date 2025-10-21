@@ -11,24 +11,28 @@
   <div id="app">
     <canvas id="shaderCanvas"></canvas>
     
-    <model-viewer class="logo" 
-      src="assets/models/logo.glb"
-      ar auto-rotate auto-rotate-delay="0" auto-rotate-speed="10"
-      camera-controls exposure="1"
-      aria-label="3D SPECTЯA® logo">
-    </model-viewer>
+<model-viewer class="logo" 
+  src="assets/models/logo.glb"
+  ar 
+  auto-rotate 
+  auto-rotate-delay="0" 
+  auto-rotate-speed="10"
+  camera-controls
+  exposure="1"
+  aria-label="3D SPECTЯA® logo">
+</model-viewer>
 
-    <footer class="footer">
-      <div class="copyright">
-        COMINGSOON-SPECT<span class="mirrored-r">Я</span>A<span class="mirrored-a">®</span><span id="year"></span>
-      </div>
-    </footer>
+<footer class="footer">
+  <div class="copyright">
+    COMING SOON CDMX COLONIA ROMA // BUENOS AIRES ARGENTINA - SPECTЯA <span class="mirrored-a">®</span> <span id="year"></span>
   </div>
+</footer>  </div>
 
   <script>
     const canvas = document.getElementById('shaderCanvas');
     const ctx = canvas.getContext('2d');
-    let time = 0, width, height;
+    let time = 0;
+    let width, height;
 
     function resize() {
       width = canvas.width = window.innerWidth * window.devicePixelRatio;
@@ -39,52 +43,73 @@
 
     function shader() {
       time += 0.016;
+      
       const imageData = ctx.createImageData(width, height);
       const data = imageData.data;
       const aspect = width / height;
-
+      
+      const sinZ = Math.sin(time);
+      const sin9Z = Math.sin(time * 1);
+      
       for(let y = 0; y < height; y += 4) {
         for(let x = 0; x < width; x += 4) {
           const px = (x / width - 0.5) * aspect;
           const py = y / height - 0.5;
-          const l = Math.hypot(px, py) || 0.01;
+          const l = Math.sqrt(px * px + py * py) || 1.01;
           const z = time + l * 5;
-          let c = 0;
-          const offset = (Math.sin(time) + 1) * Math.abs(Math.sin(time));
+          
+          let totalC = 0;
+          const offset = (sinZ + 1) * Math.abs(sin9Z);
           const uvOffset = offset / l;
-
+          
           for(let i = 0; i < 3; i++) {
-            const modX = ((((x + px * uvOffset) % width) / 10) % 1 - 0.5);
-            const modY = ((((y + py * uvOffset) % height) / 10) % 1 - 0.5);
-            c += 0.03 / Math.hypot(modX, modY);
+            const uvX = (x + px * uvOffset) % width;
+            const uvY = (y + py * uvOffset) % height;
+            const modX = ((uvX / 1 % 10) + 10) % 1 - 0.5;
+            const modY = ((uvY / 1 % 10) + 10) % 1 - 0.5;
+            totalC += 0.03 / Math.sqrt(modX * modX + modY * modY);
           }
-
-          const color = Math.min(255, c * 28);
+          
+          const color = Math.min(255, (totalC / 9) * 255);
+          
           for(let dy = 0; dy < 4; dy++) {
             for(let dx = 0; dx < 4; dx++) {
               const i = ((y + dy) * width + x + dx) * 4;
-              data[i] = data[i+1] = data[i+2] = color; data[i+3] = 255;
+              data[i] = color;
+              data[i + 1] = color;
+              data[i + 2] = color;
+              data[i + 3] = 255;
             }
           }
         }
       }
+      
       ctx.putImageData(imageData, 0, 0);
       requestAnimationFrame(shader);
     }
 
     window.addEventListener('load', () => {
-      resize(); shader();
+      resize();
+      shader();
+      
       document.getElementById('year').textContent = new Date().getFullYear();
+      
       window.addEventListener('resize', resize);
-
+      
       const mv = document.querySelector('model-viewer.logo');
       if(mv) {
-        window.addEventListener('keydown', e => {
-          if(e.code === 'Space') { mv.autoRotate = !mv.autoRotate; e.preventDefault(); }
+        window.addEventListener('keydown', (e) => {
+          if(e.code === 'Space' && document.activeElement === document.body) {
+            mv.autoRotate = !mv.autoRotate;
+            e.preventDefault();
+          }
         });
-        mv.addEventListener('click', () => mv.cameraControls = true);
+        mv.addEventListener('click', () => {
+          mv.cameraControls = true;
+        });
       }
     });
   </script>
 </body>
 </html>
+
