@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SPECTЯA®</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <canvas id="shaderCanvas"></canvas>
+    
+    <model-viewer class="logo" 
+      src="assets/models/logo.glb"
+      ar auto-rotate auto-rotate-delay="0" auto-rotate-speed="10"
+      camera-controls exposure="1"
+      aria-label="3D SPECTЯA® logo">
+    </model-viewer>
+
+    <footer class="footer">
+      <div class="copyright">
+        COMINGSOON-SPECT<span class="mirrored-r">Я</span>A<span class="mirrored-a">®</span><span id="year"></span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('shaderCanvas');
+    const ctx = canvas.getContext('2d');
+    let time = 0, width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth * window.devicePixelRatio;
+      height = canvas.height = window.innerHeight * window.devicePixelRatio;
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
+    }
+
+    function shader() {
+      time += 0.016;
+      const imageData = ctx.createImageData(width, height);
+      const data = imageData.data;
+      const aspect = width / height;
+
+      for(let y = 0; y < height; y += 4) {
+        for(let x = 0; x < width; x += 4) {
+          const px = (x / width - 0.5) * aspect;
+          const py = y / height - 0.5;
+          const l = Math.hypot(px, py) || 0.01;
+          const z = time + l * 5;
+          let c = 0;
+          const offset = (Math.sin(time) + 1) * Math.abs(Math.sin(time));
+          const uvOffset = offset / l;
+
+          for(let i = 0; i < 3; i++) {
+            const modX = ((((x + px * uvOffset) % width) / 10) % 1 - 0.5);
+            const modY = ((((y + py * uvOffset) % height) / 10) % 1 - 0.5);
+            c += 0.03 / Math.hypot(modX, modY);
+          }
+
+          const color = Math.min(255, c * 28);
+          for(let dy = 0; dy < 4; dy++) {
+            for(let dx = 0; dx < 4; dx++) {
+              const i = ((y + dy) * width + x + dx) * 4;
+              data[i] = data[i+1] = data[i+2] = color; data[i+3] = 255;
+            }
+          }
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+      requestAnimationFrame(shader);
+    }
+
+    window.addEventListener('load', () => {
+      resize(); shader();
+      document.getElementById('year').textContent = new Date().getFullYear();
+      window.addEventListener('resize', resize);
+
+      const mv = document.querySelector('model-viewer.logo');
+      if(mv) {
+        window.addEventListener('keydown', e => {
+          if(e.code === 'Space') { mv.autoRotate = !mv.autoRotate; e.preventDefault(); }
+        });
+        mv.addEventListener('click', () => mv.cameraControls = true);
+      }
+    });
+  </script>
+</body>
+</html>
